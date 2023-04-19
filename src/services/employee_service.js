@@ -1,14 +1,20 @@
 const employeeDao = require("../models/employee_Dao");
 
+const changePhoneDash = (employeeData) => {
+  return employeeData.phone_number.replace(/\./g, "-");
+};
+
+const changeDate = (date) => {
+  return date.toISOString().slice(0, 10);
+};
+
 const employeeDetail = async (id) => {
   const data = await employeeDao.getSelectedEmployeeData(id);
 
-  const changePhoneDash = data.phone_number.replace(/\./g, "-");
-
-  data.phone_number = changePhoneDash;
+  data.phone_number = changePhoneDash(data);
 
   const hireDate = data.hire_date;
-  const changeHireDate = hireDate.toISOString().slice(0, 10);
+  const changeHireDate = changeDate(hireDate);
 
   data.hire_date = changeHireDate;
 
@@ -20,15 +26,21 @@ const employeeDetail = async (id) => {
 };
 
 const employeeHistory = async (id) => {
-  let date = await employeeDao.getEmployeeWorkingDate(id);
+  let data = await employeeDao.getEmployeeHistory(id);
 
-  if (date.length > 1) {
-    date.map((value) => {
-      value.date = { start_date: value.start_date, end_date: value.end_date };
-    });
-  }
+  // 예외처리 할 부분
+  /* if(data.length === 0) {
 
-  console.log(date);
+  } */
+
+  data.map((value) => {
+    value.phone_number = changePhoneDash(value);
+    value.hire_date = changeDate(value.hire_date);
+    value.start_date = changeDate(value.start_date);
+    value.end_date = changeDate(value.end_date);
+  });
+
+  return data;
 };
 
 module.exports = { employeeDetail, employeeHistory };

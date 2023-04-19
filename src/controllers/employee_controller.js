@@ -14,6 +14,6 @@ const employeeHistory = async (req, res) => {
 
   const employeeHistory = await employeeService.employeeHistory(id);
 
-  res.status(StatusCodes.OK).json();
+  res.status(StatusCodes.OK).json(employeeHistory);
 };
 module.exports = { employeeDetail, employeeHistory };

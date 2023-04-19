@@ -20,11 +20,20 @@ const getSelectedEmployeeData = async (id) => {
  * @desc 특정 직원의 id, 근무 시작 날짜, 근무 종료 날짜를 가져오는 함수
  * @param {number} id
  */
-const getEmployeeWorkingDate = async (id) => {
+const getEmployeeHistory = async (id) => {
   const [data] = await pool.query(
-    `SELECT employee_id, start_date, end_date 
-         FROM job_history 
-         WHERE employee_id = ?;
+    `SELECT jh.employee_id,em.first_name, em.last_name,em.hire_date ,jh.start_date,
+            jh.end_date, em.first_name, em.last_name, em.email, em.phone_number,
+            j.job_title, d.department_name, l.street_address, l.postal_code, 
+            l.city, l.state_province, c.country_name, r.region_name
+    FROM job_history jh
+    JOIN employees em ON em.employee_id = jh.employee_id
+    JOIN jobs j ON jh.job_id = j.job_id
+    JOIN departments d ON jh.department_id = d.department_id
+    JOIN locations l ON d.location_id = l.location_id
+    JOIN countries c ON l.country_id = c.country_id
+    JOIN regions r ON c.region_id = r.region_id
+    WHERE jh.employee_id = ?;
         `,
     [id]
   );
@@ -32,4 +41,4 @@ const getEmployeeWorkingDate = async (id) => {
   return data;
 };
 
-module.exports = { getSelectedEmployeeData, getEmployeeWorkingDate };
+module.exports = { getSelectedEmployeeData, getEmployeeHistory };
