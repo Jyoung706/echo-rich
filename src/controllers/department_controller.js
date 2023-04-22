@@ -10,9 +10,9 @@ const departmentLocationController = async (req, res) => {
 };
 
 const departmentSalaryController = (req, res) => {
-  const { id } = req.params;
+  const { id, rate } = req.body;
 
-  departmentService.departmentSalaryService(id);
+  departmentService.departmentSalaryService(id, rate);
 
   res.status(StatusCodes.CREATED).json("request complete");
 };
