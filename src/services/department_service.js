@@ -8,4 +8,8 @@ const departmentLocationService = async (id) => {
   }
 };
 
-module.exports = { departmentLocationService };
+const departmentSalaryService = (id) => {
+  departmentDao.updateDepartmentSalary(id);
+};
+
+module.exports = { departmentLocationService, departmentSalaryService };

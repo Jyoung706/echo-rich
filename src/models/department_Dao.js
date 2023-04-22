@@ -1,6 +1,6 @@
 const pool = require("../../db_connection");
 
-const getDepartmentLocation = async (id) => {
+const getDepartmentLocation = async (departmentId) => {
   const [departmentData] = await pool.query(
     `SELECT dp.department_id,dp.department_name, lc.street_address, 
                 lc.postal_code, lc.city, lc.state_province,
@@ -11,12 +11,12 @@ const getDepartmentLocation = async (id) => {
          JOIN regions rg ON cr.region_id = rg.region_id
          WHERE dp.department_id = ?;
         `,
-    [id]
+    [departmentId]
   );
   return departmentData;
 };
 
-const getAllDepartmentLocation = async (id) => {
+const getAllDepartmentLocation = async () => {
   const [departmentData] = await pool.query(
     `SELECT dp.department_id,dp.department_name, lc.street_address, 
                 lc.postal_code, lc.city, lc.state_province,
@@ -30,4 +30,17 @@ const getAllDepartmentLocation = async (id) => {
   return departmentData;
 };
 
-module.exports = { getDepartmentLocation, getAllDepartmentLocation };
+const updateDepartmentSalary = (departmentId) => {
+  pool.query(
+    `UPDATE employees 
+            SET salary = salary + (salary * 10/100)
+            WHERE department_id = ?;
+        `,
+    [departmentId]
+  );
+};
+module.exports = {
+  getDepartmentLocation,
+  getAllDepartmentLocation,
+  updateDepartmentSalary,
+};

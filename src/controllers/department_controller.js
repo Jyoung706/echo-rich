@@ -9,4 +9,12 @@ const departmentLocationController = async (req, res) => {
   res.status(StatusCodes.OK).json(departmentData);
 };
 
-module.exports = { departmentLocationController };
+const departmentSalaryController = (req, res) => {
+  const { id } = req.params;
+
+  departmentService.departmentSalaryService(id);
+
+  res.status(StatusCodes.CREATED).json("request complete");
+};
+
+module.exports = { departmentLocationController, departmentSalaryController };
