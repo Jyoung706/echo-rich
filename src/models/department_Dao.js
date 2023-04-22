@@ -30,14 +30,26 @@ const getAllDepartmentLocation = async () => {
   return departmentData;
 };
 
-const updateDepartmentSalary = (departmentId) => {
-  pool.query(
-    `UPDATE employees 
-            SET salary = salary + (salary * 10/100)
-            WHERE department_id = ?;
-        `,
-    [departmentId]
-  );
+const updateDepartmentSalary = async (departmentId) => {
+  const conn = pool.getConnection();
+
+  try {
+    (await conn).beginTransaction();
+    (await conn).query(
+      `UPDATE employees 
+                    SET salary = salary + (salary * 10/100)
+                    WHERE department_id = ?;
+                `,
+      [departmentId]
+    );
+    (await conn).commit();
+  } catch (error) {
+    console.log(error);
+    (await conn).rollback();
+    // 에러 던지기 추가 예정
+  } finally {
+    (await conn).release();
+  }
 };
 module.exports = {
   getDepartmentLocation,
