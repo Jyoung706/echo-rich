@@ -3,6 +3,6 @@ const departmentController = require("../controllers/department_controller");
 const router = express.Router();
 
 router.get("/location/:id", departmentController.departmentLocationController);
-router.patch("/salary/:id", departmentController.departmentSalaryController);
+router.patch("/salary", departmentController.departmentSalaryController);
 
 module.exports = router;

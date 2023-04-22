@@ -30,17 +30,17 @@ const getAllDepartmentLocation = async () => {
   return departmentData;
 };
 
-const updateDepartmentSalary = async (departmentId) => {
+const updateDepartmentSalary = async (departmentId, rate) => {
   const conn = pool.getConnection();
 
   try {
     (await conn).beginTransaction();
     (await conn).query(
       `UPDATE employees 
-                    SET salary = salary + (salary * 10/100)
+                    SET salary = salary + (salary * ?/100)
                     WHERE department_id = ?;
                 `,
-      [departmentId]
+      [rate, departmentId]
     );
     (await conn).commit();
   } catch (error) {
