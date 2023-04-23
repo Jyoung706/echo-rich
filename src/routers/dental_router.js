@@ -1,7 +1,7 @@
 const express = require("express");
-const dentalInfoController = require("../controllers/dental_info_controller");
+const dentalController = require("../controllers/dental_info_controller");
 const router = express.Router();
 
-router.get("", dentalInfoController.dentalInfo);
+router.get("", dentalController.dentalInfoController);
 
 module.exports = router;
