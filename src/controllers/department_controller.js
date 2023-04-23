@@ -1,3 +1,4 @@
+const pool = require("../../db_connection");
 const departmentService = require("../services/department_service");
 const { StatusCodes } = require("http-status-codes");
 
@@ -9,12 +10,22 @@ const departmentLocationController = async (req, res) => {
   res.status(StatusCodes.OK).json(departmentData);
 };
 
-const departmentSalaryController = (req, res) => {
+const departmentSalaryController = async (req, res) => {
   const { id, rate } = req.body;
+  const conn = pool.getConnection();
 
-  departmentService.departmentSalaryService(id, rate);
-
-  res.status(StatusCodes.CREATED).json("request complete");
+  try {
+    (await conn).beginTransaction();
+    await departmentService.departmentSalaryService(id, rate, conn);
+    (await conn).commit();
+    res.status(StatusCodes.CREATED).json("request complete");
+  } catch (error) {
+    console.log(error);
+    res.status(error.statusCode).json(error.message);
+    (await conn).rollback();
+  } finally {
+    (await conn).release();
+  }
 };
 
 module.exports = { departmentLocationController, departmentSalaryController };

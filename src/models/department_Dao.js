@@ -30,25 +30,33 @@ const getAllDepartmentLocation = async () => {
   return departmentData;
 };
 
-const updateDepartmentSalary = async (departmentId, rate) => {
-  const conn = pool.getConnection();
+const updateDepartmentSalary = async (departmentId, rate, conn) => {
+  const [department] = await (
+    await conn
+  ).query(
+    `SELECT department_id FROM departments WHERE department_id = ?;
+      `,
+    [departmentId]
+  );
 
-  try {
-    (await conn).beginTransaction();
-    (await conn).query(
-      `UPDATE employees 
+  if (!department.length) {
+    const error = new Error("Not Exist Department Id");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  (await conn).query(
+    `UPDATE employees 
                     SET salary = salary + (salary * ?/100)
                     WHERE department_id = ?;
                 `,
-      [rate, departmentId]
-    );
-    (await conn).commit();
-  } catch (error) {
-    console.log(error);
-    (await conn).rollback();
-    // 에러 던지기 추가 예정
-  } finally {
-    (await conn).release();
+    [rate, departmentId]
+  );
+
+  if (rate > 100) {
+    const error = new Error("rate can't exceed 100");
+    error.statusCode = 403;
+    throw error;
   }
 };
 module.exports = {

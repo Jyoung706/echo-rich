@@ -10,6 +10,26 @@ const dentalInfoController = async (req, res) => {
     `https://openapi.gg.go.kr/DentistryHospital?KEY=${key}&Type=json&pIndex=${page}&pSize=${size}&SIGUN_NM=${name}`
   );
 
+  const errorCode = {
+    "INFO-200": 404,
+    "ERROR-290": 401,
+    "INFO-300": 403,
+    "ERROR-300": 400,
+    "ERROR-310": 400,
+    "ERROR-333": 400,
+    "ERROR-336": 431,
+    "ERROR-337": 403,
+    "ERROR-500": 400,
+    "ERROR-600": 400,
+    "ERROR-601": 400,
+  };
+
+  if (data.RESULT) {
+    const err = new Error(data.RESULT.MESSAGE);
+    err.statusCode = errorCode[data.RESULT.CODE];
+    throw err;
+  }
+
   const customizedData = dentalService.dentalInfoService(data);
 
   res.status(StatusCodes.OK).json(customizedData);

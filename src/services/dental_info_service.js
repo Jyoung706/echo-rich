@@ -1,11 +1,6 @@
 const dentalInfoService = (data) => {
   let customizedData = [{}];
 
-  /* if (data.RESULT.CODE === "INFO-200") {
-    error.statusCode = 400;
-    throw new Error(data.RESULT.MESSAGE);
-  } */
-
   const listTotalCount = data.DentistryHospital[0].head[0].list_total_count;
   const code = data.DentistryHospital[0].head[1].RESULT.CODE;
   const responseMessage = data.DentistryHospital[0].head[1].RESULT.MESSAGE;
