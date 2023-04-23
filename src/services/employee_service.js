@@ -11,6 +11,12 @@ const changeDate = (date) => {
 const employeeDetail = async (id) => {
   const data = await employeeDao.getSelectedEmployeeData(id);
 
+  if (!data) {
+    const error = new Error(`Not Exist Employee Id : ${id}`);
+    error.statusCode = 404;
+    throw error;
+  }
+
   data.phone_number = changePhoneDash(data);
 
   const hireDate = data.hire_date;
@@ -28,10 +34,11 @@ const employeeDetail = async (id) => {
 const employeeHistory = async (id) => {
   let data = await employeeDao.getEmployeeHistory(id);
 
-  // 예외처리 할 부분
-  /* if(data.length === 0) {
-
-  } */
+  if (data.length == 0) {
+    const error = new Error(`Not Exist Employee id : ${id} history`);
+    error.statusCode = 404;
+    throw error;
+  }
 
   data.map((value) => {
     value.phone_number = changePhoneDash(value);
