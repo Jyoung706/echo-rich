@@ -1,9 +1,20 @@
 const employeeDao = require("../models/employee_Dao");
 
+/**
+ * @description 조회된 사원 정보 중에 전화번호를 나누는 기호를
+ * . 대신 - 로 변경하는 함수
+ * @param {object} employeeData 데이터 베이스에서 조회된 사원 정보
+ * @returns 변환된 전화번호
+ */
 const changePhoneDash = (employeeData) => {
   return employeeData.phone_number.replace(/\./g, "-");
 };
 
+/**
+ * @description 사원 정보 중 date 자료형에서 불필요한 TZ 부분을 잘라내는 함수
+ * @param {Date} date 데이터 베이스에서 조회된 사원 정보중 Date자료형
+ * @returns string
+ */
 const changeDate = (date) => {
   return date.toISOString().slice(0, 10);
 };
