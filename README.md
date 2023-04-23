@@ -14,7 +14,7 @@ npm i
 
 ### 3. .env 파일 설정
 
-``
+```
 PORT = 어플리케이션 포트 번호
 MYSQL_HOST = DataBase 주소
 MYSQL_PORT = 데이터베이스 포트번호
